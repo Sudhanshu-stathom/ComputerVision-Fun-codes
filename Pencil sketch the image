@@ -1,0 +1,30 @@
+#coying the code straightaway from notebook so might be a bit crude
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+ img=cv2.imread('photograph.JPG')
+    image=img.copy()
+    image=cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
+    plt.imshow(image)
+    image.shape
+    scale=0.2
+width=int(image.shape[1]*scale)
+height=int(image.shape[0]*scale)
+resized_image=cv2.resize(image,(width,height),interpolation=cv2.INTER_AREA)
+kernel=np.array([[-1,-1,-1],
+                [-1,9,-1],
+                [-1,-1,-1]])
+sharpened=cv2.filter2D(resized_image,-1,kernel)
+gray = cv2.cvtColor(sharpened , cv2.COLOR_BGR2GRAY)      # convert in black and white 
+
+inv = 255-gray
+gauss = cv2.GaussianBlur(inv,(21,21),10)  # Gaussian Blur Implementation
+
+pencil = cv2.divide(gray,255-gauss,scale=256)
+plt.imshow(sharpened)
+cv2.imshow('pencil',pencil)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+#cv2.imwrite("pencilsketch.jpg",pencil)  #To save the Output Image
